@@ -20,19 +20,16 @@ public class SQLListData extends AppCompatActivity{
     private static final String TAG = "ListDataActivity";
 
     SqlDatabase myDatabase;
-
     private ListView mListView;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listdata);
-        mListView = (ListView) findViewById(R.id.ListView1);
+        mListView = findViewById(R.id.ListView1);
         myDatabase = new SqlDatabase(this);
 
         populateListView();
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -40,10 +37,7 @@ public class SQLListData extends AppCompatActivity{
                 Database.getInstance().setLocationName(name);
             }
         });
-
     }
-
-
 
     private void populateListView() {
         Log.d(TAG, "populateListView: Displaying data in the ListView.");

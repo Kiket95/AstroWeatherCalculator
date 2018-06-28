@@ -7,26 +7,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 import com.example.patryk.astroweather1.AstroWeather;
+import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Databases.Database;
 import com.example.patryk.astroweather1.Databases.FileManager;
 import com.example.patryk.astroweather1.Databases.SQLListData;
 import com.example.patryk.astroweather1.Databases.SqlDatabase;
 import com.example.patryk.astroweather1.R;
+import com.example.patryk.astroweather1.service.WeatherServiceCallback;
+import com.example.patryk.astroweather1.service.YahooService;
 
-public class Settings extends Fragment {
+public class Settings extends Fragment implements WeatherServiceCallback{
 
     FileManager fileManager;
     SqlDatabase mDatabaseHelper;
+    Switch mySwitch;
     EditText latitude,longitude,refreshRateValue,cityNameValue;
     Button saveButton,exitButton,addCityButton,showLocations;
-    ListView listOfCities;
     double latitudeValue,longitudeValue;
     int frequency;
     SunFragment sunFragment;
     MoonFragment moonFragment;
+    YahooService yahooService;
     String regex = "\\d+";
 
     @Override
@@ -39,6 +43,7 @@ public class Settings extends Fragment {
                              Bundle savedInstanceState) {
 
         View view =  inflater.inflate(R.layout.settings_main, container, false);
+        yahooService = new YahooService(this);
         sunFragment = new SunFragment();
         moonFragment = new MoonFragment();
         fileManager = new FileManager();
@@ -49,7 +54,7 @@ public class Settings extends Fragment {
         saveButton = view.findViewById(R.id.saveButton);
         exitButton = view.findViewById(R.id.exitButton);
         addCityButton = view.findViewById(R.id.AddACity);
-        listOfCities = view.findViewById(R.id.CityList);
+        mySwitch = view.findViewById(R.id.mySwitch);
         showLocations = view.findViewById(R.id.ViewCities);
         cityNameValue.setText("");
         mDatabaseHelper = new SqlDatabase(getContext());
@@ -92,12 +97,28 @@ public class Settings extends Fragment {
                     Toast.makeText(getActivity(),"ERROR",
                             Toast.LENGTH_SHORT).show();
                 }
+
                 AstroWeather.setUp();
                 sunFragment.setInfo();
                 sunFragment.setValues();
                 moonFragment.setInfo();
                 moonFragment.setValues();
                 fileManager.saveFile();
+            }
+        });
+
+        mySwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mySwitch.isChecked()) {
+                    toastMessage("Imperial System");
+                    yahooService.setUnit("f");
+                    yahooService.refreshWeather(Database.getInstance().getLocationName());
+                } else {
+                    toastMessage("Metric System");
+                    yahooService.setUnit("c");
+                    yahooService.refreshWeather(Database.getInstance().getLocationName());
+                }
             }
         });
 
@@ -127,27 +148,38 @@ public class Settings extends Fragment {
                 startActivity(intent);
             }
         });
-
         return  view;
     }
 
     public void AddData(String newEntry) {
-
         if(!newEntry.isEmpty())
         {
-            boolean insertData = mDatabaseHelper.addData(newEntry);
-            if (insertData) {
-                Database.getInstance().setLocationName(newEntry);
-                toastMessage("Data Successfully Inserted!");
-            } else {
-                toastMessage("Something went wrong");
+            Database.getInstance().setWoeidFlag(true);
+            yahooService.refreshWeather(Database.getInstance().getLocationName());
+            if(yahooService.isSuccesFlag() == true)
+            {
+                boolean insertData = mDatabaseHelper.addData(newEntry);
+                if (insertData) {
+                    toastMessage("Data Successfully Inserted!");
+                } else {
+                    toastMessage("Something went wrong");
+                }
             }
         }else {toastMessage("Invalid Data");}
+        Database.getInstance().setWoeidFlag(false);
     }
 
     private void toastMessage(String message){
         Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void serviceSucces(Channel channel) {
 
+    }
+
+    @Override
+    public void serviceFailure(Exception exception) {
+
+    }
 }

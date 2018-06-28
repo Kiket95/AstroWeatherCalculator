@@ -1,5 +1,7 @@
 package com.example.patryk.astroweather1.Data;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Item implements JSON {
@@ -10,6 +12,12 @@ public class Item implements JSON {
     private double latitude;
     private double longitude;
     private Condition condition;
+
+    public Forecast[] getForecast() {
+        return forecast;
+    }
+
+    private Forecast[] forecast = new Forecast[7];
 
     public double getLatitude() {
         return latitude;
@@ -26,5 +34,15 @@ public class Item implements JSON {
         condition.populate(data.optJSONObject("condition"));
         latitude = data.optDouble("lat");
         longitude = data.optDouble("long");
+        JSONArray jsonArray = data.optJSONArray("forecast");
+        for(int i = 0; i < 7; i++) {
+            try {
+                forecast[i] = new Forecast();
+                forecast[i].populate(jsonArray.getJSONObject(i+1));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

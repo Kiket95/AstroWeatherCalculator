@@ -42,7 +42,7 @@ public class FileManager extends AppCompatActivity{
             case 1000:
                 if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     Toast.makeText(this,"Permission Granted",Toast.LENGTH_LONG).show();
-                }else                     Toast.makeText(this,"Permission Denied",Toast.LENGTH_LONG).show();
+                }else   Toast.makeText(this,"Permission Denied",Toast.LENGTH_LONG).show();
                 finish();
 
         }
@@ -79,6 +79,7 @@ public class FileManager extends AppCompatActivity{
         }
 
     public String readFile(){
+
         String text;
         text = "PUSTO";
         try {

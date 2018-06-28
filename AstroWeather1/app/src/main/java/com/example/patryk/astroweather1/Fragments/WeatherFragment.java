@@ -1,10 +1,12 @@
 package com.example.patryk.astroweather1.Fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,9 @@ import java.util.Calendar;
 public class WeatherFragment extends Fragment implements WeatherServiceCallback{
 
     TextView temperature,city,country,time,latitude,longitude,pressure,windDirection,windSpeed;
-    private YahooService yahooService;
+    ImageView photo;
+    private YahooService yahooService ;
+    ;
 
     public static WeatherFragment newInstance(int someInt, String someString) {
         WeatherFragment fragment = new WeatherFragment();
@@ -43,6 +47,7 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.weather_information, container, false);
+        photo = view.findViewById(R.id.imageView2);
         temperature = view.findViewById(R.id.temperature);
         city = view.findViewById(R.id.cityNamevalue);
         time = view.findViewById(R.id.time);
@@ -53,8 +58,7 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
         windSpeed = view.findViewById(R.id.windSpeedValue);
         country = view.findViewById(R.id.countryName);
         yahooService = new YahooService(this);
-        YahooService.refreshWeather(Database.getInstance().getLocationName());
-        getTime();
+        yahooService.refreshWeather(Database.getInstance().getLocationName());
         return view;
     }
 
@@ -67,10 +71,15 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
         country.setText(channel.getLocation().getCountry());
         longitude.setText(Double.toString(item.getLongitude()));
         latitude.setText(Double.toString(item.getLatitude()));
+        Database.getInstance().setLatitude(item.getLatitude());
+        Database.getInstance().setLongitude(item.getLongitude());
         pressure.setText(Integer.toString(atmosphere.getPressure()) + channel.getUnit().getPressure());
         windSpeed.setText(Integer.toString(channel.getWind().getSpeed()) + channel.getUnit().getSpeed());
         windDirection.setText(Integer.toString(channel.getWind().getDirection()) + (char) 0x00B0);
         time.setText(item.getCondition().getTime());
+        int resourceID = getResources().getIdentifier("drawable/icon" + item.getCondition().getCode(),null,getContext().getPackageName());
+        Drawable weatherIcon = getResources().getDrawable(resourceID);
+        photo.setImageDrawable(weatherIcon);
     }
 
     @Override
@@ -78,7 +87,7 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
         Toast.makeText(getActivity(),exception.getMessage(),Toast.LENGTH_LONG).show();
     }
 
-    void getTime(  )
+    void refresh(  )
     {
         Thread timerThread = new Thread() {
             @Override
@@ -90,7 +99,7 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    YahooService.refreshWeather(Database.getInstance().getLocationName());
+                                    yahooService.refreshWeather(Database.getInstance().getLocationName());
                                 }
                             });
                         }
@@ -101,6 +110,4 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
         };
         timerThread.start();
     }
-
-
 }

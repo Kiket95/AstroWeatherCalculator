@@ -8,14 +8,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- * Created by Patryk on 2018-06-10.
- */
-
 public class Database {
     private double longitude;
     private double latitude;
     private int refreshRate;
+
+    public boolean isWoeidFlag() {
+        return isWoeidFlag;
+    }
+
+    public void setWoeidFlag(boolean WoeidFlag) {
+        isWoeidFlag = WoeidFlag;
+    }
+
+    public String getWoeid() {
+        return Woeid;
+    }
+
+    public void setWoeid(String woeid) {
+        Woeid = woeid;
+    }
+
+    private boolean isWoeidFlag;
+    private String Woeid;
 
     public String getLocationName() {
         return locationName;
@@ -32,6 +47,8 @@ public class Database {
         longitude = 0;
         latitude = 0;
         refreshRate = 10;
+        isWoeidFlag = false;
+        Woeid = "";
         locationName = "Sydney, Australia";
     }
 

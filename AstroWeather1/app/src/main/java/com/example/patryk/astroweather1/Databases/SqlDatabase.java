@@ -13,7 +13,6 @@ import static android.content.ContentValues.TAG;
 public class SqlDatabase extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME = "cities_table";
-    private static final String COL1 = "ID";
     private static final String COL2 = "name";
 
     public SqlDatabase(Context context) {

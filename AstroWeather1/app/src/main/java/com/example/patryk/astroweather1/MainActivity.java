@@ -14,11 +14,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    NetworkConnection networkConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager =findViewById(R.id.container);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        networkConnection = new NetworkConnection(this);
+        NetworkConnection.isOnline();
+        NetworkConnection.NetworkState();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -39,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch(position){
                 case 0:
-                    return SunFragment.newInstance(0,"Sun");
+                    return new SunFragment();
                 case 1:
-                    return MoonFragment.newInstance(0,"Moon");
+                    return new MoonFragment();
                 case 2:
-                    return WeatherFragment.newInstance(0,"Weather");
+                    return new WeatherFragment();
                 case 3:
-                    return ForecastFragment.newInstance(0,"Forecast");
+                    return new ForecastFragment();
                 case 4:
                     return new Settings();
                 default:

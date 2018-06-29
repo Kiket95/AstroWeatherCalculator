@@ -21,16 +21,16 @@ public class Database {
         isWoeidFlag = WoeidFlag;
     }
 
-    public String getWoeid() {
+    public int getWoeid() {
         return Woeid;
     }
 
-    public void setWoeid(String woeid) {
+    public void setWoeid(int woeid) {
         Woeid = woeid;
     }
 
     private boolean isWoeidFlag;
-    private String Woeid;
+    private int Woeid;
 
     public String getLocationName() {
         return locationName;
@@ -48,7 +48,7 @@ public class Database {
         latitude = 0;
         refreshRate = 10;
         isWoeidFlag = false;
-        Woeid = "";
+        Woeid = 0;
         locationName = "Sydney, Australia";
     }
 

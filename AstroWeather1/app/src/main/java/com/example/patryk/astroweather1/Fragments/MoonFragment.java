@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.patryk.astroweather1.AstroWeather;
+import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Databases.Database;
 import com.example.patryk.astroweather1.R;
+import com.example.patryk.astroweather1.service.WeatherServiceCallback;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
 
-public class MoonFragment extends Fragment  {
+public class MoonFragment extends Fragment implements WeatherServiceCallback {
 
     static TextView longitude,latitude,time;
     static TextView moonriseTime,moonsetTime,fullMoon,newMoon,moonPhase,synodMonth;
@@ -41,6 +43,8 @@ public class MoonFragment extends Fragment  {
         time = view.findViewById(R.id.Time);
         longitude = view.findViewById(R.id.longitudeValue);
         latitude = view.findViewById(R.id.latitudeValue);
+        latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
+        longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
         moonsetTime = view.findViewById(R.id.moonsetTime);
         moonriseTime = view.findViewById(R.id.moonriseTime);
         moonPhase = view.findViewById(R.id.moonPhasePercentage);
@@ -115,5 +119,16 @@ public class MoonFragment extends Fragment  {
             dataThread.start();
 
         setInfo();
+    }
+
+    @Override
+    public void serviceSucces(Channel channel) {
+        latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
+        longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
+    }
+
+    @Override
+    public void serviceFailure(Exception exception) {
+
     }
 }

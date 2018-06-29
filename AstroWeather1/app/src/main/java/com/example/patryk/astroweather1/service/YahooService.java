@@ -3,6 +3,7 @@ package com.example.patryk.astroweather1.service;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Databases.Database;
@@ -24,7 +25,6 @@ public class YahooService {
     private  WeatherServiceCallback weatherServiceCallback;
     private  String location;
     private  Exception exception;
-    private  boolean SuccesFlag = false;
     private static String unit = "c";
 
     public  String getUnit() {
@@ -33,14 +33,6 @@ public class YahooService {
 
     public  void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    public  boolean isSuccesFlag() {
-        return SuccesFlag;
-    }
-
-    public  void setSuccesFlag(boolean succesFlag) {
-        SuccesFlag = succesFlag;
     }
 
 
@@ -55,17 +47,17 @@ public class YahooService {
         {
             location = location2;
             new AsyncTask<String,Void,String>(){
+                @SuppressLint("DefaultLocale")
                 @Override
                 protected String doInBackground(String... strings){
                     String YQL,Endpoint;
                     if(Database.getInstance().isWoeidFlag())
                     {
-                        YQL = String.format("select * from weather.forecast where woeid=%s) and u='"+ unit +"'",String.valueOf(Database.getInstance().getWoeid()));
+                        YQL = String.format("select * from weather.forecast where woeid=%d)",(Database.getInstance().getWoeid()));
                         Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
                     }else
                     {
                         YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")and u= '" + unit + "'",strings[0]);
-
                         Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
                     }
 
@@ -103,11 +95,9 @@ public class YahooService {
                         int count = querryResult.optInt("count");
                         if(count == 0)
                         {
-                            setSuccesFlag(false);
                             weatherServiceCallback.serviceFailure(new LocationWeatherException("No information found for: " + location));
                             return;
                         }
-                        else setSuccesFlag(true);
 
                         Channel channel = new Channel();
                         channel.populate(querryResult.optJSONObject("results").optJSONObject("channel"));

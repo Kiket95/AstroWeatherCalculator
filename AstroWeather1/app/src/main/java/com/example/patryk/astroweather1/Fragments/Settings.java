@@ -1,5 +1,7 @@
 package com.example.patryk.astroweather1.Fragments;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 import com.example.patryk.astroweather1.AstroWeather;
 import com.example.patryk.astroweather1.Data.Channel;
+import com.example.patryk.astroweather1.Data.Item;
 import com.example.patryk.astroweather1.Databases.Database;
 import com.example.patryk.astroweather1.Databases.FileManager;
 import com.example.patryk.astroweather1.Databases.SQLListData;
@@ -19,19 +22,24 @@ import com.example.patryk.astroweather1.R;
 import com.example.patryk.astroweather1.service.WeatherServiceCallback;
 import com.example.patryk.astroweather1.service.YahooService;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class Settings extends Fragment implements WeatherServiceCallback{
 
     FileManager fileManager;
     SqlDatabase mDatabaseHelper;
     Switch mySwitch;
-    EditText latitude,longitude,refreshRateValue,cityNameValue;
-    Button saveButton,exitButton,addCityButton,showLocations;
+    public static EditText latitude,longitude;
+    EditText refreshRateValue,cityNameValue;
+    Button saveButton,exitButton,addCityButton,showLocations,searchByName;
     double latitudeValue,longitudeValue;
     int frequency;
     SunFragment sunFragment;
     MoonFragment moonFragment;
     YahooService yahooService;
-    String regex = "\\d+";
+    String newEntry;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,21 +64,25 @@ public class Settings extends Fragment implements WeatherServiceCallback{
         addCityButton = view.findViewById(R.id.AddACity);
         mySwitch = view.findViewById(R.id.mySwitch);
         showLocations = view.findViewById(R.id.ViewCities);
+        searchByName = view.findViewById(R.id.searchByData);
         cityNameValue.setText("");
         mDatabaseHelper = new SqlDatabase(getContext());
+        latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
+        longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!latitude.getText().toString().isEmpty()&& latitude.getText().toString().matches(regex))
+                if(!latitude.getText().toString().isEmpty())
                     latitudeValue = Double.parseDouble(latitude.getText().toString());
                 else Toast.makeText(getActivity(),"WRONG OR EMPTY Latitude (ONLY DIGITS)",
                         Toast.LENGTH_SHORT).show();
-                if(!longitude.getText().toString().isEmpty()&& longitude.getText().toString().matches(regex))
+                if(!longitude.getText().toString().isEmpty())
                     longitudeValue = Double.parseDouble(longitude.getText().toString());
                 else Toast.makeText(getActivity(),"WRONG OR EMPTY longitude(ONLY DIGITS)",
                         Toast.LENGTH_SHORT).show();
-                if(!refreshRateValue.getText().toString().isEmpty() && refreshRateValue.getText().toString().matches(regex))
+                if(!refreshRateValue.getText().toString().isEmpty())
                     frequency = Integer.parseInt(refreshRateValue.getText().toString());
                 else Toast.makeText(getActivity(),"WRONG OR EMPTY refresh rate(ONLY DIGITS)",
                         Toast.LENGTH_SHORT).show();
@@ -97,6 +109,7 @@ public class Settings extends Fragment implements WeatherServiceCallback{
                     Toast.makeText(getActivity(),"ERROR",
                             Toast.LENGTH_SHORT).show();
                 }
+
 
                 AstroWeather.setUp();
                 sunFragment.setInfo();
@@ -131,13 +144,19 @@ public class Settings extends Fragment implements WeatherServiceCallback{
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newEntry = cityNameValue.getText().toString();
+                newEntry = cityNameValue.getText().toString();
                 if (!(cityNameValue.toString().isEmpty())) {
                     AddData(newEntry);
                     cityNameValue.setText("");
                 } else {
                     toastMessage("You must put something in the text field!");
                 }
+            }
+        });
+        searchByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findByName();
             }
         });
 
@@ -154,19 +173,18 @@ public class Settings extends Fragment implements WeatherServiceCallback{
     public void AddData(String newEntry) {
         if(!newEntry.isEmpty())
         {
-            Database.getInstance().setWoeidFlag(true);
-            yahooService.refreshWeather(Database.getInstance().getLocationName());
-            if(yahooService.isSuccesFlag() == true)
-            {
-                boolean insertData = mDatabaseHelper.addData(newEntry);
-                if (insertData) {
-                    toastMessage("Data Successfully Inserted!");
-                } else {
-                    toastMessage("Something went wrong");
-                }
+//            Database.getInstance().setWoeidFlag(true);
+//            Database.getInstance().setWoeid((Integer.parseInt(cityNameValue.getText().toString())));
+//            yahooService.refreshWeather(Database.getInstance().getLocationName());
+            boolean insertData = mDatabaseHelper.addData(newEntry);
+            if (insertData) {
+                toastMessage("Data Successfully Inserted!");
+            } else {
+                toastMessage("Something went wrong");
             }
+      //      Database.getInstance().setWoeidFlag(false);
+
         }else {toastMessage("Invalid Data");}
-        Database.getInstance().setWoeidFlag(false);
     }
 
     private void toastMessage(String message){
@@ -175,11 +193,44 @@ public class Settings extends Fragment implements WeatherServiceCallback{
 
     @Override
     public void serviceSucces(Channel channel) {
+        Item item = channel.getItem();
+        longitude.setText(Double.toString(item.getLongitude()));
+        latitude.setText(Double.toString(item.getLatitude()));
+        Database.getInstance().setLatitude(item.getLatitude());
+        Database.getInstance().setLongitude(item.getLongitude());
 
+        if(Database.getInstance().isWoeidFlag())
+        {
+            boolean insertData = mDatabaseHelper.addData("Lodz");
+            if (insertData) {
+                toastMessage("Data Successfully Inserted!");
+            } else {
+                toastMessage("Something went wrong");
+            }
+            Database.getInstance().setWoeidFlag(false);
+        }
     }
 
     @Override
     public void serviceFailure(Exception exception) {
+        if(Database.getInstance().isWoeidFlag())
+        {
+            toastMessage("WRONG NAME OF CITY");
+        }
+    }
+
+    public void findByName()
+    {
+        try{
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(64.499474, -165.405792, 1);
+            longitude.setText(Double.toString(-165.405792));
+            latitude.setText(Double.toString(64.499474));
+            Database.getInstance().setLocationName(addresses.get(0).getLocality());
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -78,10 +78,9 @@ public class FileManager extends AppCompatActivity{
             }
         }
 
-    public String readFile(){
-
-        String text;
-        text = "PUSTO";
+    public String[] readFile(){
+        String[] text;
+        text = new String[7];
         try {
             FileInputStream fis = new FileInputStream(file);
             DataInputStream in = new DataInputStream(fis);
@@ -89,7 +88,11 @@ public class FileManager extends AppCompatActivity{
                     new BufferedReader(new InputStreamReader(in));
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                text = strLine;
+                for(int i= 0;i<7;i++)
+                {
+                    text[i] = strLine;
+                }
+
             }
             in.close();
         } catch (IOException e) {

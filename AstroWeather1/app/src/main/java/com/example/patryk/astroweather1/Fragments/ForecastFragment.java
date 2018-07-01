@@ -16,7 +16,9 @@ import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Data.Forecast;
 import com.example.patryk.astroweather1.Data.Item;
 import com.example.patryk.astroweather1.Databases.Database;
+import com.example.patryk.astroweather1.Databases.FileDataManager;
 import com.example.patryk.astroweather1.Databases.FileManager;
+import com.example.patryk.astroweather1.NetworkConnection;
 import com.example.patryk.astroweather1.R;
 import com.example.patryk.astroweather1.service.WeatherServiceCallback;
 import com.example.patryk.astroweather1.service.YahooService;
@@ -31,7 +33,7 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
     private TextView data,high,high2,high3,high4,high5,high6,high7,
             low,low2,low3,low4,low5,low6,low7,date,date2,date3,date4,date5,date6,date7,
             text,text2,text3,text4,text5,text6,text7;
-    FileManager fileManager;
+    FileDataManager fileManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,11 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
         setView(view);
         yahooService = new YahooService(ForecastFragment.this);
         yahooService.refreshWeather(Database.getInstance().getLocationName());
-
+        if(!NetworkConnection.isOnline())
+        {
+            fileManager = new FileDataManager(getContext());
+            fileManager.load(this);
+        }
 
      //   fileManager = new FileManager();
 
@@ -81,6 +87,8 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
                 Drawable weatherIcon = getResources().getDrawable(image);
                 imageViews[i].setImageDrawable(weatherIcon);
             }
+            fileManager = new FileDataManager(getContext());
+            fileManager.save(channel);
             System.out.println("FORECAST");
             System.out.println("FORECAST");
             System.out.println("FORECAST");
@@ -89,6 +97,7 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
             System.out.println("FORECAST");
             System.out.println("FORECAST");
             System.out.println("FORECAST");
+
         }
     }
 

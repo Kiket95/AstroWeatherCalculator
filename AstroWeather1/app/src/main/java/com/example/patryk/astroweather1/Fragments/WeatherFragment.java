@@ -20,10 +20,14 @@ import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Data.Item;
 import com.example.patryk.astroweather1.Data.MyLocation;
 import com.example.patryk.astroweather1.Databases.Database;
+import com.example.patryk.astroweather1.Databases.FileDataManager;
+import com.example.patryk.astroweather1.Databases.FileManager;
+import com.example.patryk.astroweather1.NetworkConnection;
 import com.example.patryk.astroweather1.R;
 import com.example.patryk.astroweather1.service.WeatherServiceCallback;
 import com.example.patryk.astroweather1.service.YahooService;
 
+import java.io.File;
 import java.util.Calendar;
 
 public class WeatherFragment extends Fragment implements WeatherServiceCallback{
@@ -31,6 +35,7 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
     TextView temperature,city,country,time,latitude,longitude,pressure,windDirection,windSpeed;
     ImageView photo;
     private YahooService yahooService ;
+    FileDataManager fileManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,11 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.weather_information, container, false);
+        if(!NetworkConnection.isOnline())
+        {
+            fileManager = new FileDataManager(this.getActivity());
+            fileManager.load(this);
+        }
         photo = view.findViewById(R.id.imageView2);
         temperature = view.findViewById(R.id.temperature);
         city = view.findViewById(R.id.cityNamevalue);
@@ -84,18 +94,23 @@ public class WeatherFragment extends Fragment implements WeatherServiceCallback{
         System.out.println("Weather");
         System.out.println("Weather");
         System.out.println("Weather");
+
         if(Channel.ErrorFlag)
         {
+            Database.getInstance().setLocationName(Settings.tempLocation);
             yahooService.refreshWeather(Settings.tempLocation);
             Toast.makeText(getActivity(),"CANNOT FIND CITY",Toast.LENGTH_LONG).show();
             Channel.ErrorFlag = false;
+        }else {
+            fileManager = new FileDataManager(this.getActivity());
+            fileManager.save(channel);
         }
-
     }
 
     @Override
     public void serviceFailure(Exception exception) {
         Toast.makeText(getActivity(),exception.getMessage(),Toast.LENGTH_LONG).show();
+        Channel.ErrorFlag = false;
     }
 
     void refresh(  )

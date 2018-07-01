@@ -1,5 +1,6 @@
 package com.example.patryk.astroweather1.Data;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Condition implements JSON {
@@ -47,5 +48,21 @@ public class Condition implements JSON {
         temperature = data.optInt("temp");
         time = data.optString("date");
 
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("code",code);
+            data.put("text",description);
+            data.put("temp",temperature);
+            data.put("date",time);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

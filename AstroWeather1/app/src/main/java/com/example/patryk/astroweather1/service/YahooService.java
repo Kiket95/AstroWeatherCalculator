@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class YahooService {
-    public enum Operation{findByName,None,findByLocalizationName};
+    public enum Operation{findByName,None,findByLocalizationName,findByLatLong};
     public static Operation operation = Operation.None;
     public WeatherServiceCallback weatherServiceCallback;
     private String location;
@@ -47,18 +47,17 @@ public class YahooService {
                 @Override
                 protected String doInBackground(String... strings){
                     String YQL,Endpoint;
-                    String newYork = "New York";
 
+                    if(operation == Operation.findByLatLong)
+                    {
+                        System.out.println(Database.getInstance().getLatitude() + Database.getInstance().getLongitude());
+                        YQL ="select * from weather.forecast where woeid in (SELECT woeid FROM geo.places WHERE text=\"("+Database.getInstance().getLatitude()+","+ Database.getInstance().getLongitude() +")\")";
+                    }
 
-//                    if(Database.getInstance().isWoeidFlag())
-//                    {
-//                        YQL = "query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.places%20where%20text%3D%22Place%20%New York";
-//                        Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
-//                    }else
-
+                    else
                         YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")and u= '" + Database.getInstance().getUnit() + "'",strings[0]);
-                        Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
 
+                    Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
 
                     try{
                         URL url = new URL(Endpoint);
@@ -95,7 +94,7 @@ public class YahooService {
                         if(count == 0)
                         {
                             Database.getInstance().setWoeidFlag(false);
-                            weatherServiceCallback.serviceFailure(new LocationWeatherException("No information found for: " + location));
+                            weatherServiceCallback.serviceFailure(new LocationWeatherException("No information found"));
                             return;
                         }
                         if(count>0 && operation==Operation.findByName)

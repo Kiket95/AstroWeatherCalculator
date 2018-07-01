@@ -1,5 +1,6 @@
 package com.example.patryk.astroweather1.Data;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Wind implements JSON {
@@ -22,5 +23,18 @@ public class Wind implements JSON {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("direction",direction);
+            data.put("speed",speed);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

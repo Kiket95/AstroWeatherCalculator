@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.example.patryk.astroweather1.Fragments.WeatherFragment;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Channel implements JSON {
@@ -57,5 +58,21 @@ public class Channel implements JSON {
             ErrorFlag = true;
         }
 
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("atmosphere",atmosphere.toJSON());
+            data.put("wind",wind.toJSON());
+            data.put("units",unit.toJSON());
+            data.put("item",item.toJSON());
+            data.put("location",location.toJSON());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

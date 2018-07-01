@@ -1,5 +1,6 @@
 package com.example.patryk.astroweather1.Data;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MyLocation implements JSON {
@@ -19,5 +20,17 @@ public class MyLocation implements JSON {
     public void populate(JSONObject data) {
         city = data.optString("city");
         country = data.optString("country");
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject data= new JSONObject();
+        try {
+            data.put("city",city);
+            data.put("country",country);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

@@ -2,6 +2,7 @@ package com.example.patryk.astroweather1.Data;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Forecast implements JSON {
@@ -46,6 +47,24 @@ public class Forecast implements JSON {
         this.high = data.optDouble("high");
         this.low = data.optDouble("low");
         this.text = data.optString("text");
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject data = new JSONObject();
+        try {
+
+            data.put("date", date);
+            data.put("day", day);
+            data.put("code", code);
+            data.put("text", text);
+            data.put("low", low);
+            data.put("high",high);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
 }

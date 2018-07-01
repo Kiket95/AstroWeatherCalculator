@@ -8,6 +8,7 @@ import android.widget.Toast;
 public class NetworkConnection {
     static Context context;
 
+
     public NetworkConnection(Context context){
         this.context = context;
     }
@@ -22,6 +23,7 @@ public class NetworkConnection {
         if (isOnline())
             Toast.makeText(context, "Network is available", Toast.LENGTH_LONG).show();
         else
+
             Toast.makeText(context, "Network is not available", Toast.LENGTH_LONG).show();
     }
 

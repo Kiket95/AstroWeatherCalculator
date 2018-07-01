@@ -1,6 +1,7 @@
 package com.example.patryk.astroweather1.Fragments;
 
 import android.content.Intent;
+import android.graphics.Path;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -33,23 +34,25 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class Settings extends AppCompatActivity implements  WeatherServiceCallback{
 
     FileManager fileManager;
     SqlDatabase mDatabaseHelper;
     Switch mySwitch;
+
     public static EditText latitude,longitude;
     EditText refreshRateValue,cityNameValue;
-    Button saveButton,exitButton,addCityButton,showLocations,searchByData,searchByLocation;
+    Button exitButton,addCityButton,showLocations,searchByData,searchByLocation;
     double latitudeValue,longitudeValue;
-    int frequency;
     public static String tempLocation;
     SunFragment sunFragment;
     MoonFragment moonFragment;
     YahooService yahooService;
     String newEntry,city;
-    public static boolean showByData = false;
+    private static boolean switchFlag = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,34 +77,12 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
         latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
         longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
         yahooService = new YahooService(this);
-      //  yahooService.refreshWeather(Database.getInstance().getLocationName());
+        mySwitch.setChecked(switchFlag);
         AstroWeather.setUp();
 //        sunFragment.setInfo();
 //        sunFragment.setValues();
 //        moonFragment.setInfo();
 //        moonFragment.setValues();
-        //   fileManager.saveFile();
-
-//        saveButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(!refreshRateValue.getText().toString().isEmpty())
-//                    frequency = Integer.parseInt(refreshRateValue.getText().toString());
-//                else Toast.makeText(Settings.this,"WRONG OR EMPTY refresh rate(ONLY DIGITS)",
-//                        Toast.LENGTH_SHORT).show();
-//
-//                try
-//                {
-//                       if(frequency >= 10 && frequency <= 100)
-//                    Database.getInstance().setRefreshRate(frequency);
-//                       else  Toast.makeText(Settings.this,"Time must be a value between 10 and 100", Toast.LENGTH_SHORT).show();
-//                }catch (NumberFormatException  e)
-//                {
-//                    Toast.makeText(Settings.this,"ERROR",
-//                            Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
         mySwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,11 +90,12 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
                 if (mySwitch.isChecked()) {
                     toastMessage("Imperial System");
                     Database.getInstance().setUnit("f");
+                    switchFlag = true;
                 } else {
                     toastMessage("Metric System");
                     Database.getInstance().setUnit("c");
+                    switchFlag = false;
                 }
-                yahooService = new YahooService(Settings.this);
                 yahooService.refreshWeather(Database.getInstance().getLocationName());
             }
         });
@@ -124,6 +106,7 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
                 System.exit(0);
             }
         });
+
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +124,7 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
         searchByData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findByData();
+                findByDataLatLong();
             }
         });
 
@@ -167,6 +150,25 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
         });
     }
 
+    private void findByDataLatLong() {
+        double tempLatitude = Database.getInstance().getLatitude();
+        double tempLongitude = Database.getInstance().getLongitude();
+        if (checkValues()) {
+            if ((latitudeValue > -90 && latitudeValue < 90) && (longitudeValue > -180 && longitudeValue < 180)) {
+                YahooService.operation = YahooService.Operation.findByLatLong;
+
+                Database.getInstance().setLongitude(longitudeValue);
+                Database.getInstance().setLatitude(latitudeValue);
+                yahooService.refreshWeather(Database.getInstance().getLocationName());
+            } else {
+                Toast.makeText(Settings.this, "set latitude between -90 and 90 AND set longitude between -180 and 180 ",
+                        Toast.LENGTH_SHORT).show();
+                Database.getInstance().setLatitude(tempLatitude);
+                Database.getInstance().setLongitude(tempLongitude);
+            }
+        }
+    }
+
 
     public void AddData(String newEntry) {
         if(!newEntry.isEmpty())
@@ -182,183 +184,184 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }
 
-    public void findByData()
-    {
-            try {
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> addresses = new List<Address>() {
-                    @Override
-                    public int size() {
-                        return  size();
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean contains(Object o) {
-                        return false;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Iterator<Address> iterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public Object[] toArray() {
-                        return new Object[0];
-                    }
-
-                    @NonNull
-                    @Override
-                    public <T> T[] toArray(@NonNull T[] a) {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean add(Address address) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean remove(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean containsAll(@NonNull Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(@NonNull Collection<? extends Address> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(int index, @NonNull Collection<? extends Address> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean removeAll(@NonNull Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean retainAll(@NonNull Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {
-
-                    }
-
-                    @Override
-                    public Address get(int index) {
-                        return null;
-                    }
-
-                    @Override
-                    public Address set(int index, Address element) {
-                        return null;
-                    }
-
-                    @Override
-                    public void add(int index, Address element) {
-
-                    }
-
-                    @Override
-                    public Address remove(int index) {
-                        return null;
-                    }
-
-                    @Override
-                    public int indexOf(Object o) {
-                        return 0;
-                    }
-
-                    @Override
-                    public int lastIndexOf(Object o) {
-                        return 0;
-                    }
-
-                    @NonNull
-                    @Override
-                    public ListIterator<Address> listIterator() {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public ListIterator<Address> listIterator(int index) {
-                        return null;
-                    }
-
-                    @NonNull
-                    @Override
-                    public List<Address> subList(int fromIndex, int toIndex) {
-                        return null;
-                    }
-                };
-                if(checkValues()){
-                    System.out.println(latitudeValue);
-                    System.out.println(longitudeValue);
-                    System.out.println(latitudeValue);
-                    System.out.println(longitudeValue);
-                    System.out.println(Database.getInstance().getLatitude());
-                    System.out.println(Database.getInstance().getLongitude());
-                    System.out.println(Database.getInstance().getLatitude());
-                    System.out.println(Database.getInstance().getLongitude());
-
-                        if((latitudeValue > -90 && latitudeValue < 90) && (longitudeValue > -180 && longitudeValue < 180) )
-                        {
-                            addresses = geocoder.getFromLocation(latitudeValue, longitudeValue, 1);
-                        }else{
-                            Toast.makeText(Settings.this,"set latitude between -90 and 90 AND set longitude between -180 and 180 ",
-                                    Toast.LENGTH_SHORT).show();
-                            Database.getInstance().setLatitude(latitudeValue);
-                        }
-
-                    if(!addresses.isEmpty())
-                    {
-                        System.out.println(addresses);
-                        System.out.println(addresses);
-                        System.out.println(addresses);
-                        System.out.println(addresses);
-                        System.out.println(addresses);
-                        Database.getInstance().setLongitude(longitudeValue);
-                        Database.getInstance().setLatitude(latitudeValue);
-                        Database.getInstance().setLocationName(addresses.get(0).getLocality());
-                        yahooService.refreshWeather(addresses.get(0).getLocality());
-                        cityNameValue.setText(addresses.get(0).getLocality());
-                        toastMessage("Found Closest City");
-                    }
-                    else
-                    {
-                        latitudeValue = Database.getInstance().getLatitude();
-                        longitudeValue = Database.getInstance().getLongitude();
-                        System.out.println(latitudeValue);
-                        toastMessage("CANNOT FIND CITY");
-                        System.out.println(longitudeValue);
-                    }
-                }
-            }catch (IndexOutOfBoundsException e)
-            {
-                toastMessage("CANNOT FIND CITY");
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-    }
+//    public void findByData()
+//    {
+//            try {
+//                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+//                List<Address> addresses = new List<Address>() {
+//                    @Override
+//                    public int size() {
+//                        return  size();
+//                    }
+//
+//                    @Override
+//                    public boolean isEmpty() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean contains(Object o) {
+//                        return false;
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public Iterator<Address> iterator() {
+//                        return null;
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public Object[] toArray() {
+//                        return new Object[0];
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public <T> T[] toArray(@NonNull T[] a) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public boolean add(Address address) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean remove(Object o) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean containsAll(@NonNull Collection<?> c) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean addAll(@NonNull Collection<? extends Address> c) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean addAll(int index, @NonNull Collection<? extends Address> c) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean removeAll(@NonNull Collection<?> c) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean retainAll(@NonNull Collection<?> c) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public void clear() {
+//
+//                    }
+//
+//                    @Override
+//                    public Address get(int index) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public Address set(int index, Address element) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public void add(int index, Address element) {
+//
+//                    }
+//
+//                    @Override
+//                    public Address remove(int index) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public int indexOf(Object o) {
+//                        return 0;
+//                    }
+//
+//                    @Override
+//                    public int lastIndexOf(Object o) {
+//                        return 0;
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public ListIterator<Address> listIterator() {
+//                        return null;
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public ListIterator<Address> listIterator(int index) {
+//                        return null;
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public List<Address> subList(int fromIndex, int toIndex) {
+//                        return null;
+//                    }
+//                };
+//                if(checkValues()){
+//                    System.out.println(latitudeValue);
+//                    System.out.println(longitudeValue);
+//                    System.out.println(latitudeValue);
+//                    System.out.println(longitudeValue);
+//                    System.out.println(Database.getInstance().getLatitude());
+//                    System.out.println(Database.getInstance().getLongitude());
+//                    System.out.println(Database.getInstance().getLatitude());
+//                    System.out.println(Database.getInstance().getLongitude());
+//
+//                        if((latitudeValue > -90 && latitudeValue < 90) && (longitudeValue > -180 && longitudeValue < 180) )
+//                        {
+//                            addresses = geocoder.getFromLocation(latitudeValue, longitudeValue, 1);
+//                        }else{
+//                            Toast.makeText(Settings.this,"set latitude between -90 and 90 AND set longitude between -180 and 180 ",
+//                                    Toast.LENGTH_SHORT).show();
+//                            Database.getInstance().setLatitude(latitudeValue);
+//                        }
+//
+//                    if(!addresses.isEmpty() && addresses.get(0) != null)
+//                    {
+//                        System.out.println(addresses);
+//                        System.out.println(addresses);
+//                        System.out.println(addresses);
+//                        System.out.println(addresses);
+//                        System.out.println(addresses);
+//                        Database.getInstance().setLongitude(longitudeValue);
+//                        Database.getInstance().setLatitude(latitudeValue);
+//                      //  tempLocation = Database.getInstance().getLocationName();
+//                     //   Database.getInstance().setLocationName(addresses.get(0).getLocality());
+//                     //   yahooService.refreshWeather(addresses.get(0).getLocality());
+//                        cityNameValue.setText(addresses.get(0).getLocality());
+//                        toastMessage("Found Closest City");
+//                    }
+//                    else
+//                    {
+//                        latitudeValue = Database.getInstance().getLatitude();
+//                        longitudeValue = Database.getInstance().getLongitude();
+//                        System.out.println(latitudeValue);
+//                        toastMessage("CANNOT FIND CITY");
+//                        System.out.println(longitudeValue);
+//                    }
+//                }
+//            }catch (IndexOutOfBoundsException e)
+//            {
+//                toastMessage("CANNOT FIND CITY");
+//            }
+//            catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }
+//    }
 
     @Override
     public void serviceSucces(Channel channel) {
@@ -370,15 +373,22 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
             mDatabaseHelper.addData(placeName);
             Channel.ErrorFlag = false;
         }
-        if(YahooService.operation == YahooService.Operation.findByLocalizationName)
+        if(YahooService.operation == YahooService.Operation.findByLocalizationName && !Channel.ErrorFlag)
         {
             Database.getInstance().setLocationName(city);
             Intent intent = new Intent(Settings.this, MainActivity.class);
             startActivity(intent);
         }
+        if(YahooService.operation == YahooService.Operation.findByLatLong && !Channel.ErrorFlag)
+        {
+            Database.getInstance().setLocationName(channel.getLocation().getCity());
+            cityNameValue.setText(channel.getLocation().getCity() + ", " + channel.getLocation().getCountry());
+//            Intent intent = new Intent(Settings.this, MainActivity.class);
+//            startActivity(intent);
+        }
         if(Channel.ErrorFlag)
         {
-            yahooService.refreshWeather("Lodz");
+            yahooService.refreshWeather(tempLocation);
             Channel.ErrorFlag = false;
         }
 

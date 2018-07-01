@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Databases.SQLListData"></activity>
+        <activity android:name=".Fragments.Settings"></activity>
+
     </application>
 
 </manifest>

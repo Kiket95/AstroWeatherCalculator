@@ -30,18 +30,22 @@ public class Item implements JSON {
 
     @Override
     public void populate(JSONObject data) {
-        condition = new Condition();
-        condition.populate(data.optJSONObject("condition"));
-        latitude = data.optDouble("lat");
-        longitude = data.optDouble("long");
-        JSONArray jsonArray = data.optJSONArray("forecast");
-        for(int i = 0; i < 7; i++) {
-            try {
-                forecast[i] = new Forecast();
-                forecast[i].populate(jsonArray.getJSONObject(i+1));
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try{
+            condition = new Condition();
+            condition.populate(data.optJSONObject("condition"));
+            latitude = data.optDouble("lat");
+            longitude = data.optDouble("long");
+            JSONArray jsonArray = data.optJSONArray("forecast");
+            for(int i = 0; i < 7; i++) {
+
+                    forecast[i] = new Forecast();
+                    forecast[i].populate(jsonArray.getJSONObject(i+1));
+
             }
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }catch (NullPointerException e) {
+            e.printStackTrace();
         }
 
     }

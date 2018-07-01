@@ -281,21 +281,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/Sunset" />
         </android.support.constraint.ConstraintLayout>
 
-        <fragment
-            android:id="@+id/sunfragment"
-            android:name="com.example.patryk.astroweather1.Fragments.SunFragment"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:layout="@layout/sun_information" />
-
-        <fragment android:name="com.example.patryk.astroweather1.Fragments.MoonFragment"
-            android:id="@+id/moonfragment"
-            android:layout_weight="1"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            tools:layout="@layout/moon_information" />
-
 
     </ScrollView>
 

@@ -18,18 +18,7 @@ public class SunFragment extends Fragment  {
 
     static TextView longitude,latitude,time;
     static TextView sunriseTime,sunsetTime,dawnTime,sunriseAzimuth,sunsetAzimuth,duskTime;
-    int SomeInt;
-    String someString;
     static private DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-    public static SunFragment newInstance(int someInt, String someString) {
-        SunFragment fragment = new SunFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", someInt);
-        args.putString("someString", someString);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +41,8 @@ public class SunFragment extends Fragment  {
         dawnTime = view.findViewById(R.id.dawnTime);
         duskTime = view.findViewById(R.id.duskTime);
         refresh(view);
-
+        setInfo();
+       // setValues();
         return view;
     }
 

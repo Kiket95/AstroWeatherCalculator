@@ -13,6 +13,16 @@ public class Database {
     private double latitude;
     private int refreshRate;
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    private String unit;
+
     public boolean isWoeidFlag() {
         return isWoeidFlag;
     }
@@ -40,7 +50,7 @@ public class Database {
         this.locationName = locationName;
     }
 
-    private static String locationName = "Sydney, Australia";
+    private static String locationName = "Lodz, PL";
     private static final Database instance = new Database();
 
     private Database(){
@@ -49,7 +59,8 @@ public class Database {
         refreshRate = 10;
         isWoeidFlag = false;
         Woeid = 0;
-        locationName = "Sydney, Australia";
+        locationName = "Lodz, PL";
+        unit = "c";
     }
 
     public static Database getInstance(){

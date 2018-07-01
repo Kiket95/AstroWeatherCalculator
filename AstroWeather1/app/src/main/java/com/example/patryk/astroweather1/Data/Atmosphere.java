@@ -11,6 +11,11 @@ public class Atmosphere implements JSON {
 
     @Override
     public void populate(JSONObject data) {
-        pressure = data.optInt("pressure");
+        try{
+            pressure = data.optInt("pressure");
+        }catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

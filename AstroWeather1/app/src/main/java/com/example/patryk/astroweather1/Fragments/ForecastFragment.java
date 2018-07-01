@@ -1,5 +1,6 @@
 package com.example.patryk.astroweather1.Fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,21 +26,12 @@ import org.w3c.dom.Text;
 public class ForecastFragment extends Fragment implements WeatherServiceCallback{
 
     ImageView photo,photo2,photo3,photo4,photo5,photo6,photo7;
-    private YahooService yahooService;
-    private Button read;
+    YahooService yahooService;
+ //   private Button read;
     private TextView data,high,high2,high3,high4,high5,high6,high7,
             low,low2,low3,low4,low5,low6,low7,date,date2,date3,date4,date5,date6,date7,
             text,text2,text3,text4,text5,text6,text7;
     FileManager fileManager;
-
-    public static ForecastFragment newInstance(int someInt, String someString) {
-        ForecastFragment fragment = new ForecastFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", someInt);
-        args.putString("someString", someString);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,21 +44,18 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
     {
         View view = inflater.inflate(R.layout.weather_forecast, container, false);
         setView(view);
-//        read = view.findViewById(R.id.Read);
-//        data = view.findViewById(R.id.data);
-        yahooService = new YahooService(this);
+        yahooService = new YahooService(ForecastFragment.this);
         yahooService.refreshWeather(Database.getInstance().getLocationName());
-        fileManager = new FileManager();
-//        read.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                data.setText(fileManager.readFile());
-//            }
-//        });
 
+
+     //   fileManager = new FileManager();
+
+
+     //    refresh();
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void serviceSucces(Channel channel) {
         Forecast[] forecast = channel.getItem().getForecast();
@@ -85,6 +74,15 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
             Drawable weatherIcon = getResources().getDrawable(image);
             imageViews[i].setImageDrawable(weatherIcon);
         }
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+        System.out.println("FORECAST");
+
     }
 
     @Override
@@ -128,8 +126,36 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
         date5 = view.findViewById(R.id.date5);
         date6 = view.findViewById(R.id.date6);
         date7 = view.findViewById(R.id.date7);
+    }
 
+    void refresh(  )
+    {
+        Thread timerThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(10000);
+                        if(getActivity()!=null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setYahoo();
+                                }
+                            });
+                        }
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        timerThread.start();
+    }
 
+    void setYahoo()
+    {
+        yahooService = new YahooService(this);
+        yahooService.refreshWeather(Database.getInstance().getLocationName());
     }
 
 }

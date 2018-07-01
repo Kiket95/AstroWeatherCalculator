@@ -1,6 +1,8 @@
 package com.example.patryk.astroweather1.service;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Path;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -8,6 +10,7 @@ import android.widget.Toast;
 import com.example.patryk.astroweather1.Data.Channel;
 import com.example.patryk.astroweather1.Databases.Database;
 import com.example.patryk.astroweather1.Databases.SqlDatabase;
+import com.example.patryk.astroweather1.Fragments.Settings;
 import com.example.patryk.astroweather1.NetworkConnection;
 
 import org.json.JSONException;
@@ -22,18 +25,11 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class YahooService {
-    private  WeatherServiceCallback weatherServiceCallback;
-    private  String location;
-    private  Exception exception;
-    private static String unit = "c";
-
-    public  String getUnit() {
-        return unit;
-    }
-
-    public  void setUnit(String unit) {
-        this.unit = unit;
-    }
+    public enum Operation{findByName,None,findByLocalizationName};
+    public static Operation operation = Operation.None;
+    public WeatherServiceCallback weatherServiceCallback;
+    private String location;
+    private Exception exception;
 
 
     public YahooService(WeatherServiceCallback callback){
@@ -45,21 +41,24 @@ public class YahooService {
     {
         if(NetworkConnection.isOnline())
         {
-            location = location2;
+            this.location = location2;
             new AsyncTask<String,Void,String>(){
                 @SuppressLint("DefaultLocale")
                 @Override
                 protected String doInBackground(String... strings){
                     String YQL,Endpoint;
-                    if(Database.getInstance().isWoeidFlag())
-                    {
-                        YQL = String.format("select * from weather.forecast where woeid=%d)",(Database.getInstance().getWoeid()));
+                    String newYork = "New York";
+
+
+//                    if(Database.getInstance().isWoeidFlag())
+//                    {
+//                        YQL = "query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.places%20where%20text%3D%22Place%20%New York";
+//                        Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
+//                    }else
+
+                        YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")and u= '" + Database.getInstance().getUnit() + "'",strings[0]);
                         Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
-                    }else
-                    {
-                        YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\")and u= '" + unit + "'",strings[0]);
-                        Endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", Uri.encode(YQL));
-                    }
+
 
                     try{
                         URL url = new URL(Endpoint);
@@ -95,13 +94,21 @@ public class YahooService {
                         int count = querryResult.optInt("count");
                         if(count == 0)
                         {
+                            Database.getInstance().setWoeidFlag(false);
                             weatherServiceCallback.serviceFailure(new LocationWeatherException("No information found for: " + location));
                             return;
+                        }
+                        if(count>0 && operation==Operation.findByName)
+                        {
+                            Database.getInstance().setWoeidFlag(true);
                         }
 
                         Channel channel = new Channel();
                         channel.populate(querryResult.optJSONObject("results").optJSONObject("channel"));
                         weatherServiceCallback.serviceSucces(channel);
+                        operation = Operation.None;
+                        Database.getInstance().setWoeidFlag(false);
+
                     } catch (JSONException e) {
                         weatherServiceCallback.serviceFailure(e);
                     }
@@ -114,7 +121,6 @@ public class YahooService {
 
     public class LocationWeatherException extends Exception
     {
-
         public LocationWeatherException(String message) {
             super(message);
         }

@@ -16,7 +16,11 @@ public class Wind implements JSON {
     private int speed;
     @Override
     public void populate(JSONObject data) {
-        direction = data.optInt("direction");
-        speed = data.optInt("speed");
+        try {
+            direction = data.optInt("direction");
+            speed = data.optInt("speed");
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 }

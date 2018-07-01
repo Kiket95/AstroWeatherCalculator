@@ -22,15 +22,6 @@ public class MoonFragment extends Fragment implements WeatherServiceCallback {
     static TextView moonriseTime,moonsetTime,fullMoon,newMoon,moonPhase,synodMonth;
     static private DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    public static MoonFragment newInstance(int someInt, String someString) {
-        MoonFragment fragment = new MoonFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", someInt);
-        args.putString("someString", someString);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

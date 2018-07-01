@@ -8,11 +8,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.content.ContentValues.TAG;
 
 public class SqlDatabase extends SQLiteOpenHelper {
 
     private static final String TABLE_NAME = "cities_table";
+    private static final String COL1 = "ID";
     private static final String COL2 = "name";
 
     public SqlDatabase(Context context) {
@@ -56,6 +60,37 @@ public class SqlDatabase extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_NAME;
         Cursor data = db.rawQuery(query, null);
         return data;
+    }
+
+
+    public void deleteName(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE "
+                + COL2 + " = '" + name + "'";
+        Log.d(TAG, "deleteName: query: " + query);
+        Log.d(TAG, "deleteName: Deleting " + name + " from database.");
+        db.execSQL(query);
+    }
+
+    public List<String> getListOfCities()
+    {
+        List<String> cities = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor data = db.rawQuery(query, null);
+        if(data.moveToFirst())
+        do
+        {
+            cities.add(data.getString(1));
+        }while(data.moveToNext());
+        System.out.println(cities);
+        System.out.println(cities);
+        System.out.println(cities);
+        System.out.println(cities);
+        System.out.println(cities);
+        System.out.println(cities);
+       // data.close();
+        return cities;
     }
 
 }

@@ -12,14 +12,14 @@ public class NetworkConnection {
         this.context = context;
     }
 
-    static public boolean isOnline() {
+    public static boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    static public void NetworkState() {
-        if (NetworkConnection.isOnline())
+    public static void NetworkState() {
+        if (isOnline())
             Toast.makeText(context, "Network is available", Toast.LENGTH_LONG).show();
         else
             Toast.makeText(context, "Network is not available", Toast.LENGTH_LONG).show();

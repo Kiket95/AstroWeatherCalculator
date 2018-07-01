@@ -1,10 +1,14 @@
 package com.example.patryk.astroweather1.Fragments;
+
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,125 +17,104 @@ import android.widget.Switch;
 import android.widget.Toast;
 import com.example.patryk.astroweather1.AstroWeather;
 import com.example.patryk.astroweather1.Data.Channel;
-import com.example.patryk.astroweather1.Data.Item;
 import com.example.patryk.astroweather1.Databases.Database;
 import com.example.patryk.astroweather1.Databases.FileManager;
 import com.example.patryk.astroweather1.Databases.SQLListData;
 import com.example.patryk.astroweather1.Databases.SqlDatabase;
+import com.example.patryk.astroweather1.MainActivity;
 import com.example.patryk.astroweather1.R;
 import com.example.patryk.astroweather1.service.WeatherServiceCallback;
 import com.example.patryk.astroweather1.service.YahooService;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Set;
 
-public class Settings extends Fragment implements WeatherServiceCallback{
+public class Settings extends AppCompatActivity implements  WeatherServiceCallback{
 
     FileManager fileManager;
     SqlDatabase mDatabaseHelper;
     Switch mySwitch;
     public static EditText latitude,longitude;
     EditText refreshRateValue,cityNameValue;
-    Button saveButton,exitButton,addCityButton,showLocations,searchByName;
+    Button saveButton,exitButton,addCityButton,showLocations,searchByData,searchByLocation;
     double latitudeValue,longitudeValue;
     int frequency;
+    public static String tempLocation;
     SunFragment sunFragment;
     MoonFragment moonFragment;
     YahooService yahooService;
-    String newEntry;
+    String newEntry,city;
+    public static boolean showByData = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view =  inflater.inflate(R.layout.settings_main, container, false);
-        yahooService = new YahooService(this);
+        setContentView(R.layout.settings_main);
+        Database.getInstance().setWoeidFlag(false);
         sunFragment = new SunFragment();
         moonFragment = new MoonFragment();
-        fileManager = new FileManager();
-        latitude = view.findViewById(R.id.latitude);
-        longitude = view.findViewById(R.id.longitude);
-        cityNameValue = view.findViewById(R.id.CityNameValue);
-        refreshRateValue = view.findViewById(R.id.refreshRate);
-        saveButton = view.findViewById(R.id.saveButton);
-        exitButton = view.findViewById(R.id.exitButton);
-        addCityButton = view.findViewById(R.id.AddACity);
-        mySwitch = view.findViewById(R.id.mySwitch);
-        showLocations = view.findViewById(R.id.ViewCities);
-        searchByName = view.findViewById(R.id.searchByData);
+        //     fileManager = new FileManager();
+        latitude = findViewById(R.id.latitude);
+        longitude = findViewById(R.id.longitude);
+        cityNameValue = findViewById(R.id.CityNameValue);
+        refreshRateValue = findViewById(R.id.refreshRate);
+        searchByLocation = findViewById(R.id.searchByLocation);
+        exitButton = findViewById(R.id.exitButton);
+        addCityButton = findViewById(R.id.AddACity);
+        mySwitch = findViewById(R.id.mySwitch);
+        showLocations = findViewById(R.id.ViewCities);
+        searchByData = findViewById(R.id.searchByData);
         cityNameValue.setText("");
-        mDatabaseHelper = new SqlDatabase(getContext());
+        mDatabaseHelper = new SqlDatabase(Settings.this);
         latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
         longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
+        yahooService = new YahooService(this);
+      //  yahooService.refreshWeather(Database.getInstance().getLocationName());
+        AstroWeather.setUp();
+//        sunFragment.setInfo();
+//        sunFragment.setValues();
+//        moonFragment.setInfo();
+//        moonFragment.setValues();
+        //   fileManager.saveFile();
 
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!latitude.getText().toString().isEmpty())
-                    latitudeValue = Double.parseDouble(latitude.getText().toString());
-                else Toast.makeText(getActivity(),"WRONG OR EMPTY Latitude (ONLY DIGITS)",
-                        Toast.LENGTH_SHORT).show();
-                if(!longitude.getText().toString().isEmpty())
-                    longitudeValue = Double.parseDouble(longitude.getText().toString());
-                else Toast.makeText(getActivity(),"WRONG OR EMPTY longitude(ONLY DIGITS)",
-                        Toast.LENGTH_SHORT).show();
-                if(!refreshRateValue.getText().toString().isEmpty())
-                    frequency = Integer.parseInt(refreshRateValue.getText().toString());
-                else Toast.makeText(getActivity(),"WRONG OR EMPTY refresh rate(ONLY DIGITS)",
-                        Toast.LENGTH_SHORT).show();
-
-                try
-                {
-                    if(latitudeValue > -90 && latitudeValue < 90 )
-                        Database.getInstance().setLatitude(latitudeValue);
-                    else
-                        Toast.makeText(getActivity(),"set latitude between -90 and 90",
-                                Toast.LENGTH_SHORT).show();
-
-                    if (longitudeValue > -180 && longitudeValue < 180)
-                        Database.getInstance().setLongitude(longitudeValue);
-                    else    Toast.makeText(getActivity(),"set longitude between -180 and 180",
-                            Toast.LENGTH_SHORT).show();
-
-                 //   if(frequency >= 10 && frequency <= 100)
-                        Database.getInstance().setRefreshRate(frequency);
-                 //   else  Toast.makeText(getActivity(),"Time must be a value between 10 and 100",
-                 //           Toast.LENGTH_SHORT).show();
-                }catch (NumberFormatException  e)
-                {
-                    Toast.makeText(getActivity(),"ERROR",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-
-                AstroWeather.setUp();
-                sunFragment.setInfo();
-                sunFragment.setValues();
-                moonFragment.setInfo();
-                moonFragment.setValues();
-                fileManager.saveFile();
-            }
-        });
+//        saveButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(!refreshRateValue.getText().toString().isEmpty())
+//                    frequency = Integer.parseInt(refreshRateValue.getText().toString());
+//                else Toast.makeText(Settings.this,"WRONG OR EMPTY refresh rate(ONLY DIGITS)",
+//                        Toast.LENGTH_SHORT).show();
+//
+//                try
+//                {
+//                       if(frequency >= 10 && frequency <= 100)
+//                    Database.getInstance().setRefreshRate(frequency);
+//                       else  Toast.makeText(Settings.this,"Time must be a value between 10 and 100", Toast.LENGTH_SHORT).show();
+//                }catch (NumberFormatException  e)
+//                {
+//                    Toast.makeText(Settings.this,"ERROR",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         mySwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mySwitch.isChecked()) {
                     toastMessage("Imperial System");
-                    yahooService.setUnit("f");
-                    yahooService.refreshWeather(Database.getInstance().getLocationName());
+                    Database.getInstance().setUnit("f");
                 } else {
                     toastMessage("Metric System");
-                    yahooService.setUnit("c");
-                    yahooService.refreshWeather(Database.getInstance().getLocationName());
+                    Database.getInstance().setUnit("c");
                 }
+                yahooService = new YahooService(Settings.this);
+                yahooService.refreshWeather(Database.getInstance().getLocationName());
             }
         });
 
@@ -144,6 +127,7 @@ public class Settings extends Fragment implements WeatherServiceCallback{
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tempLocation=Database.getInstance().getLocationName();
                 newEntry = cityNameValue.getText().toString();
                 if (!(cityNameValue.toString().isEmpty())) {
                     AddData(newEntry);
@@ -151,86 +135,292 @@ public class Settings extends Fragment implements WeatherServiceCallback{
                 } else {
                     toastMessage("You must put something in the text field!");
                 }
+                Database.getInstance().setWoeidFlag(false);
             }
         });
-        searchByName.setOnClickListener(new View.OnClickListener() {
+        searchByData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findByName();
+                findByData();
             }
         });
 
         showLocations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SQLListData.class);
+                Intent intent = new Intent(Settings.this, SQLListData.class);
                 startActivity(intent);
             }
         });
-        return  view;
+
+        searchByLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tempLocation=Database.getInstance().getLocationName();
+                city = cityNameValue.getText().toString();
+                if(!city.isEmpty())
+                {
+                    YahooService.operation = YahooService.Operation.findByLocalizationName;
+                    yahooService.refreshWeather(city);
+                }else toastMessage("cannot find a city");
+            }
+        });
     }
+
 
     public void AddData(String newEntry) {
         if(!newEntry.isEmpty())
         {
-//            Database.getInstance().setWoeidFlag(true);
-//            Database.getInstance().setWoeid((Integer.parseInt(cityNameValue.getText().toString())));
-//            yahooService.refreshWeather(Database.getInstance().getLocationName());
-            boolean insertData = mDatabaseHelper.addData(newEntry);
-            if (insertData) {
-                toastMessage("Data Successfully Inserted!");
-            } else {
-                toastMessage("Something went wrong");
-            }
-      //      Database.getInstance().setWoeidFlag(false);
-
-        }else {toastMessage("Invalid Data");}
+            YahooService.operation = YahooService.Operation.findByName;
+            Database.getInstance().setLocationName(newEntry);
+            yahooService.refreshWeather(Database.getInstance().getLocationName());
+        }else toastMessage("City name cannot be empty");
+        Database.getInstance().setWoeidFlag(false);
     }
 
     private void toastMessage(String message){
-        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void findByData()
+    {
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> addresses = new List<Address>() {
+                    @Override
+                    public int size() {
+                        return  size();
+                    }
+
+                    @Override
+                    public boolean isEmpty() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean contains(Object o) {
+                        return false;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Iterator<Address> iterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public Object[] toArray() {
+                        return new Object[0];
+                    }
+
+                    @NonNull
+                    @Override
+                    public <T> T[] toArray(@NonNull T[] a) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean add(Address address) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean remove(Object o) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean containsAll(@NonNull Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(@NonNull Collection<? extends Address> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean addAll(int index, @NonNull Collection<? extends Address> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean removeAll(@NonNull Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean retainAll(@NonNull Collection<?> c) {
+                        return false;
+                    }
+
+                    @Override
+                    public void clear() {
+
+                    }
+
+                    @Override
+                    public Address get(int index) {
+                        return null;
+                    }
+
+                    @Override
+                    public Address set(int index, Address element) {
+                        return null;
+                    }
+
+                    @Override
+                    public void add(int index, Address element) {
+
+                    }
+
+                    @Override
+                    public Address remove(int index) {
+                        return null;
+                    }
+
+                    @Override
+                    public int indexOf(Object o) {
+                        return 0;
+                    }
+
+                    @Override
+                    public int lastIndexOf(Object o) {
+                        return 0;
+                    }
+
+                    @NonNull
+                    @Override
+                    public ListIterator<Address> listIterator() {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public ListIterator<Address> listIterator(int index) {
+                        return null;
+                    }
+
+                    @NonNull
+                    @Override
+                    public List<Address> subList(int fromIndex, int toIndex) {
+                        return null;
+                    }
+                };
+                if(checkValues()){
+                    System.out.println(latitudeValue);
+                    System.out.println(longitudeValue);
+                    System.out.println(latitudeValue);
+                    System.out.println(longitudeValue);
+                    System.out.println(Database.getInstance().getLatitude());
+                    System.out.println(Database.getInstance().getLongitude());
+                    System.out.println(Database.getInstance().getLatitude());
+                    System.out.println(Database.getInstance().getLongitude());
+
+                        if((latitudeValue > -90 && latitudeValue < 90) && (longitudeValue > -180 && longitudeValue < 180) )
+                        {
+                            addresses = geocoder.getFromLocation(latitudeValue, longitudeValue, 1);
+                        }else{
+                            Toast.makeText(Settings.this,"set latitude between -90 and 90 AND set longitude between -180 and 180 ",
+                                    Toast.LENGTH_SHORT).show();
+                            Database.getInstance().setLatitude(latitudeValue);
+                        }
+
+                    if(!addresses.isEmpty())
+                    {
+                        System.out.println(addresses);
+                        System.out.println(addresses);
+                        System.out.println(addresses);
+                        System.out.println(addresses);
+                        System.out.println(addresses);
+                        Database.getInstance().setLongitude(longitudeValue);
+                        Database.getInstance().setLatitude(latitudeValue);
+                        Database.getInstance().setLocationName(addresses.get(0).getLocality());
+                        yahooService.refreshWeather(addresses.get(0).getLocality());
+                        cityNameValue.setText(addresses.get(0).getLocality());
+                        toastMessage("Found Closest City");
+                    }
+                    else
+                    {
+                        latitudeValue = Database.getInstance().getLatitude();
+                        longitudeValue = Database.getInstance().getLongitude();
+                        System.out.println(latitudeValue);
+                        toastMessage("CANNOT FIND CITY");
+                        System.out.println(longitudeValue);
+                    }
+                }
+            }catch (IndexOutOfBoundsException e)
+            {
+                toastMessage("CANNOT FIND CITY");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
     }
 
     @Override
     public void serviceSucces(Channel channel) {
-        Item item = channel.getItem();
-        longitude.setText(Double.toString(item.getLongitude()));
-        latitude.setText(Double.toString(item.getLatitude()));
-        Database.getInstance().setLatitude(item.getLatitude());
-        Database.getInstance().setLongitude(item.getLongitude());
 
-        if(Database.getInstance().isWoeidFlag())
+        //mDatabaseHelper.getListOfCities();
+        String placeName = channel.getLocation().getCity() + ", " + channel.getLocation().getCountry();
+        if(Database.getInstance().isWoeidFlag() && !Channel.ErrorFlag && !mDatabaseHelper.getListOfCities().contains(placeName))
         {
-            boolean insertData = mDatabaseHelper.addData("Lodz");
-            if (insertData) {
-                toastMessage("Data Successfully Inserted!");
-            } else {
-                toastMessage("Something went wrong");
-            }
-            Database.getInstance().setWoeidFlag(false);
+            mDatabaseHelper.addData(placeName);
+            Channel.ErrorFlag = false;
         }
+        if(YahooService.operation == YahooService.Operation.findByLocalizationName)
+        {
+            Database.getInstance().setLocationName(city);
+            Intent intent = new Intent(Settings.this, MainActivity.class);
+            startActivity(intent);
+        }
+        if(Channel.ErrorFlag)
+        {
+            yahooService.refreshWeather("Lodz");
+            Channel.ErrorFlag = false;
+        }
+
+//        latitude.setText(String.valueOf(Database.getInstance().getLatitude()));
+//        longitude.setText(String.valueOf(Database.getInstance().getLongitude()));
     }
 
     @Override
     public void serviceFailure(Exception exception) {
-        if(Database.getInstance().isWoeidFlag())
-        {
-            toastMessage("WRONG NAME OF CITY");
-        }
+         Toast.makeText(Settings.this,exception.getMessage(),Toast.LENGTH_LONG).show();
     }
 
-    public void findByName()
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+       // yahooService.refreshWeather(Database.getInstance().getLocationName());
+        Database.getInstance().setWoeidFlag(false);
+        Intent intent = new Intent(Settings.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    public boolean checkValues()
     {
-        try{
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(64.499474, -165.405792, 1);
-            longitude.setText(Double.toString(-165.405792));
-            latitude.setText(Double.toString(64.499474));
-            Database.getInstance().setLocationName(addresses.get(0).getLocality());
-        }catch (IOException e)
+        if(!latitude.getText().toString().isEmpty())
+            latitudeValue = Double.parseDouble(latitude.getText().toString());
+        else
         {
-            e.printStackTrace();
+            Toast.makeText(Settings.this,"WRONG OR EMPTY longitude(ONLY DIGITS)",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!longitude.getText().toString().isEmpty())
+            longitudeValue = Double.parseDouble(longitude.getText().toString());
+        else
+        {
+            Toast.makeText(Settings.this,"WRONG OR EMPTY longitude(ONLY DIGITS)",
+                    Toast.LENGTH_SHORT).show();
+            return false;
         }
 
+        return true;
     }
+
+
 }

@@ -12,176 +12,185 @@
     tools:context="com.example.patryk.astroweather1.Fragments.Settings">
 
 
-    <EditText
-        android:id="@+id/latitude"
-        android:layout_width="176dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:digits="0123456789+-."
-        android:text="0"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/CityNameValue"
-        android:layout_width="176dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="184dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="elo"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CityName" />
-
-    <EditText
-        android:id="@+id/longitude"
-        android:layout_width="176dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:digits="0123456789+-."
-        android:text="0"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/latitude" />
-
-    <EditText
-        android:id="@+id/refreshRate"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:digits="0123456789"
-        android:text="10"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="76dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:text="Refreshing Rate:"
-        app:layout_constraintBottom_toTopOf="@+id/refreshRate"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/exitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:text="EXIT"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/Latitude"
-        android:layout_width="162dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Latitude"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toStartOf="@+id/latitude"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/Longitude"
-        android:layout_width="162dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Longitude"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toStartOf="@+id/longitude"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Latitude" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/AddACity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="204dp"
-        android:layout_marginTop="8dp"
-        android:text="ADD LOCATION"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CityNameValue" />
+            <EditText
+                android:id="@+id/latitude"
+                android:layout_width="176dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="32dp"
+                android:digits="0123456789+-."
+                android:ems="10"
+                android:inputType="numberSigned"
+                android:text="0"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/ViewCities"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Show Locations"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude" />
+            <EditText
+                android:id="@+id/CityNameValue"
+                android:layout_width="176dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="400dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/CityName" />
 
-    <Button
-        android:id="@+id/searchByData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="search By Data"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ViewCities" />
+            <Button
+                android:id="@+id/searchByLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="404dp"
+                android:layout_marginTop="8dp"
+                android:text="Search by Location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/CityNameValue" />
 
-    <TextView
-        android:id="@+id/CityName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="240dp"
-        android:layout_marginTop="28dp"
-        android:text="City Name:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude" />
+            <EditText
+                android:id="@+id/Latitude"
+                android:layout_width="162dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="32dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:ems="10"
+                android:text="Latitude"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toStartOf="@+id/latitude"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Switch
-        android:id="@+id/mySwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="64dp"
-        android:text="Temp"
-        android:textOff="Farenheit"
-        android:textOn="Celsius"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/Longitude"
+                android:layout_width="162dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="8dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:ems="10"
+                android:text="Longitude"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toStartOf="@+id/longitude"
+                app:layout_constraintTop_toBottomOf="@+id/Latitude" />
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="100dp"
-        android:text="SAVE"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Longitude" />
+            <Button
+                android:id="@+id/searchByData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="36dp"
+                android:text="search By Data"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/longitude" />
+
+            <Button
+                android:id="@+id/ViewCities"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:layout_marginEnd="32dp"
+                android:text="Show Locations"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/AddACity" />
+
+            <EditText
+                android:id="@+id/longitude"
+                android:layout_width="176dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:digits="0123456789+-."
+                android:ems="10"
+                android:inputType="numberSigned"
+                android:text="0"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/latitude" />
+
+            <Switch
+                android:id="@+id/mySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="200dp"
+                android:text="Temp"
+                android:textOff="Farenheit"
+                android:textOn="Celsius"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/CityName"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginEnd="468dp"
+                android:layout_marginTop="16dp"
+                android:text="City Name:"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="76dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="232dp"
+                android:layout_marginTop="12dp"
+                android:text="Refreshing Rate:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Longitude" />
+
+            <Button
+                android:id="@+id/AddACity"
+                android:layout_width="wrap_content"
+                android:layout_height="49dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:text="ADD LOCATION"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchByData" />
+
+            <Button
+                android:id="@+id/exitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:text="EXIT"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/refreshRate"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="84dp"
+                android:layout_marginEnd="272dp"
+                android:layout_marginTop="8dp"
+                android:digits="0123456789"
+                android:ems="10"
+                android:inputType="numberSigned"
+                android:text="10"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintVertical_bias="0.026" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

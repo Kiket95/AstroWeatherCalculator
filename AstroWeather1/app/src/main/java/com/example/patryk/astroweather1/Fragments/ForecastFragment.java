@@ -58,31 +58,38 @@ public class ForecastFragment extends Fragment implements WeatherServiceCallback
     @SuppressLint("SetTextI18n")
     @Override
     public void serviceSucces(Channel channel) {
-        Forecast[] forecast = channel.getItem().getForecast();
-        ImageView[] imageViews = {photo,photo2,photo3,photo4,photo5,photo6,photo7};
-        TextView[] texts = {text,text2,text3,text4,text5,text6,text7};
-        TextView[] dates = {date,date2,date3,date4,date5,date6,date7};
-        TextView[] highs = {high,high2,high3,high4,high5,high6,high7};
-        TextView[] lows = {low,low2,low3,low4,low5,low6,low7};
-        for(int i = 0;i<7;i++)
-        {
-            dates[i].setText(forecast[i].getDay() + " " + forecast[i].getDate());
-            highs[i].setText("↑ "+ forecast[i].getHigh() + " °" + channel.getUnit().getTemperature());
-            lows[i].setText( "↓ " + forecast[i].getLow() + " °" + channel.getUnit().getTemperature());
-            texts[i].setText(forecast[i].getText());
-            int image = getResources().getIdentifier("drawable/icon" + forecast[i].getCode(),null,getContext().getPackageName());
-            Drawable weatherIcon = getResources().getDrawable(image);
-            imageViews[i].setImageDrawable(weatherIcon);
-        }
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
-        System.out.println("FORECAST");
 
+        if(Channel.ErrorFlag)
+        {
+            yahooService.refreshWeather(Settings.tempLocation);
+            Channel.ErrorFlag = false;
+        }
+        else{
+            Forecast[] forecast = channel.getItem().getForecast();
+            ImageView[] imageViews = {photo,photo2,photo3,photo4,photo5,photo6,photo7};
+            TextView[] texts = {text,text2,text3,text4,text5,text6,text7};
+            TextView[] dates = {date,date2,date3,date4,date5,date6,date7};
+            TextView[] highs = {high,high2,high3,high4,high5,high6,high7};
+            TextView[] lows = {low,low2,low3,low4,low5,low6,low7};
+            for(int i = 0;i<7;i++)
+            {
+                dates[i].setText(forecast[i].getDay() + " " + forecast[i].getDate());
+                highs[i].setText("↑ "+ forecast[i].getHigh() + " °" + channel.getUnit().getTemperature());
+                lows[i].setText( "↓ " + forecast[i].getLow() + " °" + channel.getUnit().getTemperature());
+                texts[i].setText(forecast[i].getText());
+                int image = getResources().getIdentifier("drawable/icon" + forecast[i].getCode(),null,getContext().getPackageName());
+                Drawable weatherIcon = getResources().getDrawable(image);
+                imageViews[i].setImageDrawable(weatherIcon);
+            }
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+            System.out.println("FORECAST");
+        }
     }
 
     @Override

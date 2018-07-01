@@ -25,18 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/duskTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/fullMoon"
-                android:layout_below="@+id/fullMoon"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="32dp"
-                android:text="Wait..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dawnTime" />
-
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="200dp"
@@ -65,49 +53,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
             <TextView
-                android:id="@+id/sunsetAzimuth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/Moonset"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_toEndOf="@+id/Moonset"
-                android:text="Wait..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sunsetTime" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/dawntimeText"
+                android:layout_width="128dp"
+                android:layout_height="33dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/moonsetTime"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp"
-                android:text="Azimuth:"
-                android:textAlignment="textEnd"
+                android:layout_marginTop="28dp"
+                android:text="Dawn Time:"
+                android:textAlignment="center"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:text="Time:"
-                android:textAlignment="textEnd"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Sunrise" />
-
-            <TextView
-                android:id="@+id/dawnTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/fullMoon"
-                android:layout_below="@+id/fullMoon"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                android:text="Wait..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sunsetAzimuth" />
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <TextView
                 android:id="@+id/Time"
@@ -126,54 +83,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/longitudeValue"
+                android:id="@+id/latitudeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/Latitude"
-                android:layout_marginEnd="120dp"
-                android:layout_marginTop="112dp"
-                android:layout_toEndOf="@+id/Longitude"
+                android:layout_alignBaseline="@+id/Latitude"
+                android:layout_alignBottom="@+id/Latitude"
+                android:layout_alignEnd="@+id/longitudeValue"
                 android:text="Wait..."
                 android:textAlignment="textStart"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/sunriseAzimuth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="12dp"
-                android:layout_toStartOf="@+id/longitudeValue"
-                android:text="Wait..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sunriseTime" />
-
-            <TextView
-                android:id="@+id/dawntimeText"
-                android:layout_width="128dp"
-                android:layout_height="33dp"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/moonsetTime"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Dawn Time:"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:text="Time:"
-                android:textAlignment="textEnd"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Sunset" />
+                tools:layout_editor_absoluteX="536dp"
+                tools:layout_editor_absoluteY="84dp" />
 
             <TextView
                 android:id="@+id/Sunset"
@@ -188,6 +107,123 @@
                 android:textAlignment="center"
                 android:textSize="25sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Sunrise" />
+
+            <TextView
+                android:id="@+id/sunriseAzimuth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_toStartOf="@+id/longitudeValue"
+                android:text="Wait..."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sunriseTime" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:text="Time:"
+                android:textAlignment="textEnd"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Sunset" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="12dp"
+                android:text="Azimuth:"
+                android:textAlignment="textEnd"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/duskTimetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/closestFullMoon"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="Dusk Time:"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dawntimeText" />
+
+            <TextView
+                android:id="@+id/sunsetAzimuth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Moonset"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@+id/Moonset"
+                android:text="Wait..."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sunsetTime" />
+
+            <TextView
+                android:id="@+id/dawnTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/fullMoon"
+                android:layout_below="@+id/fullMoon"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="46dp"
+                android:text="Wait..."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sunsetAzimuth" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="12dp"
+                android:text="Azimuth:"
+                android:textAlignment="textEnd"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+            <TextView
+                android:id="@+id/duskTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/fullMoon"
+                android:layout_below="@+id/fullMoon"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="32dp"
+                android:text="Wait..."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dawnTime" />
+
+            <TextView
+                android:id="@+id/sunsetTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/sunsetAzimuth"
+                android:layout_alignBottom="@+id/sunsetAzimuth"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="32dp"
+                android:text="Wait..."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Sunset" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="Time:"
+                android:textAlignment="textEnd"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Sunrise" />
 
@@ -216,43 +252,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/latitudeValue"
+                android:id="@+id/longitudeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/Latitude"
-                android:layout_alignBottom="@+id/Latitude"
-                android:layout_alignEnd="@+id/longitudeValue"
-                android:layout_marginEnd="120dp"
-                android:layout_marginTop="84dp"
+                android:layout_above="@+id/Latitude"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="112dp"
+                android:layout_toEndOf="@+id/Longitude"
                 android:text="Wait..."
                 android:textAlignment="textStart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp"
-                android:text="Azimuth:"
-                android:textAlignment="textEnd"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-            <TextView
-                android:id="@+id/duskTimetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/closestFullMoon"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:text="Dusk Time:"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dawntimeText" />
 
             <TextView
                 android:id="@+id/Longitude"
@@ -267,21 +277,7 @@
                 android:textAlignment="textStart"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/Latitude" />
-
-            <TextView
-                android:id="@+id/sunsetTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/sunsetAzimuth"
-                android:layout_alignBottom="@+id/sunsetAzimuth"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="32dp"
-                android:text="Wait..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Sunset" />
         </android.support.constraint.ConstraintLayout>
-
-
     </ScrollView>
 
 

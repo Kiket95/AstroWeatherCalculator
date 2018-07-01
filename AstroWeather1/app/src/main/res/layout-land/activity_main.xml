@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.patryk.astroweather1.MainActivity">
+    tools:context=".MainActivity">
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -15,17 +16,43 @@
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <Button
+            android:id="@+id/settingsButton"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
+            android:layout_height="wrap_content"
+            android:text="SETTINGS" />
 
-        </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="INFORMATIONS" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Moon" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SUN" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forecast" />
+
+        </android.support.design.widget.TabLayout>
+
 
     </android.support.design.widget.AppBarLayout>
 
@@ -33,36 +60,6 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <!--<fragment-->
-                <!--android:id="@+id/weatherfrag"-->
-                <!--android:name="com.example.patryk.astroweather1.Fragments.WeatherFragment"-->
-                <!--android:layout_width="100dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--tools:layout="@layout/sun_information" />-->
-
-                <!--<fragment android:name="com.example.patryk.astroweather1.Fragments.ForecastFragment"-->
-                    <!--android:id="@+id/m"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_width="100dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--tools:layout="@layout/moon_information" />-->
-
-            </LinearLayout>
-
-        </ScrollView>
-    </android.support.v4.view.ViewPager>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

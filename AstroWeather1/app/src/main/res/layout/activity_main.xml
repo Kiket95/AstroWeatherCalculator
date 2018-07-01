@@ -24,7 +24,7 @@
                 android:id="@+id/tabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sun" />
+                android:text="Overall" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem2"
@@ -36,7 +36,7 @@
                 android:id="@+id/tabItem3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Info" />
+                android:text="SUN" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItem4"

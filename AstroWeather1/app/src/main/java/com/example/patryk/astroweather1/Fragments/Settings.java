@@ -368,10 +368,12 @@ public class Settings extends AppCompatActivity implements  WeatherServiceCallba
 
         //mDatabaseHelper.getListOfCities();
         String placeName = channel.getLocation().getCity() + ", " + channel.getLocation().getCountry();
-        if(Database.getInstance().isWoeidFlag() && !Channel.ErrorFlag && !mDatabaseHelper.getListOfCities().contains(placeName))
+        if(Database.getInstance().isWoeidFlag() && !Channel.ErrorFlag)
         {
-            mDatabaseHelper.addData(placeName);
-            Channel.ErrorFlag = false;
+            if(!mDatabaseHelper.getListOfCities().contains(placeName))
+                mDatabaseHelper.addData(placeName);
+            else toastMessage("City already exist on your list");
+
         }
         if(YahooService.operation == YahooService.Operation.findByLocalizationName && !Channel.ErrorFlag)
         {

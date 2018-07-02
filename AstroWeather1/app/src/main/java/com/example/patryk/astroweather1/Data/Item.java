@@ -35,11 +35,13 @@ public class Item implements JSON {
             condition.populate(data.optJSONObject("condition"));
             latitude = data.optDouble("lat");
             longitude = data.optDouble("long");
+
             JSONArray jsonArray = data.optJSONArray("forecast");
+
             for(int i = 0; i < 7; i++) {
 
                     forecast[i] = new Forecast();
-                    forecast[i].populate(jsonArray.getJSONObject(i+1));
+                    forecast[i].populate(jsonArray.getJSONObject(i));
 
             }
         }  catch (JSONException e) {
@@ -58,12 +60,12 @@ public class Item implements JSON {
             data.put("lat", latitude);
             data.put("long", longitude);
             data.put("condition",condition.toJSON());
-            JSONArray arr = new JSONArray();
-            for(int i=0;i<forecast.length;i++){
-                arr.put(forecast[i].toJSON());
+            JSONArray jsonArray = new JSONArray();
+            for(int i=0;i<7;i++){
+                jsonArray.put(forecast[i].toJSON());
             }
 
-            data.put("forecast",arr);
+            data.put("forecast",jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }

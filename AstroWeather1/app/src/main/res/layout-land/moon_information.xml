@@ -152,7 +152,7 @@
                 android:layout_alignStart="@+id/fullMoon"
                 android:layout_below="@+id/fullMoon"
                 android:layout_marginEnd="32dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="70dp"
                 android:text="Wait..."
                 android:textAlignment="textStart"
                 android:textColor="@android:color/white"
@@ -210,13 +210,13 @@
                 android:layout_alignStart="@+id/fullMoon"
                 android:layout_below="@+id/fullMoon"
                 android:layout_marginEnd="32dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="96dp"
                 android:text="Wait..."
                 android:textAlignment="textStart"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/moonsetTime" />
+                app:layout_constraintTop_toBottomOf="@+id/Moonset" />
 
             <TextView
                 android:id="@+id/Latitude"
@@ -299,7 +299,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="75dp"
                 android:text="Wait..."
                 android:textAlignment="textStart"
                 android:textColor="@android:color/white"
@@ -312,7 +312,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="75dp"
                 android:text="Wait..."
                 android:textAlignment="textStart"
                 android:textColor="@android:color/white"
